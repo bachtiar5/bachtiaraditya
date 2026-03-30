@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Developer Portfolio [SYSTEM_V11.PERFECT]</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto+Mono:wght@300;400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- 1. CONFIGURATION --- */
+        :root {
+            --bg-color: #050505;
+            --bg-grid: #111;
+            --primary: #ff003c; /* Cyber Red */
+            --primary-dark: #990024;
+            --silver: #e0e0e0;
+            --silver-dim: #666666;
+            
+            --font-head: 'Archivo Black', sans-serif;
+            --font-code: 'Roboto Mono', monospace;
+            --font-roblox: 'Inter', sans-serif; 
+            
+            --ease-smooth: cubic-bezier(0.23, 1, 0.32, 1);
+            --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* --- 2. BASE & RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--silver);
+            font-family: var(--font-code);
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(20,20,20,0.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(20,20,20,0.4) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        body::before {
+            content: ""; position: fixed; top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border: 1px solid rgba(255, 0, 60, 0.1); pointer-events: none; z-index: 90;
+        }
+
+        #matrix-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; opacity: 0.15; pointer-events: none;
+        }
+
+        .crt-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 2px, 3px 100%; pointer-events: none; z-index: 999;
+        }
+
+        .hacker-text { display: inline-block; }
+        .text-primary { color: var(--primary); }
+
+        /* --- 3. KILAUAN / SHINE EFFECT --- */
+        .btn-shine {
+            position: relative; overflow: hidden;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white !important; border: 1px solid #ff4d79;
+        }
+        .btn-shine::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            transform: skewX(-25deg); animation: shineSweep 4s infinite;
+        }
+        @keyframes shineSweep { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+
+        /* --- 4. CUSTOM CURSOR --- */
+        @media (hover: hover) and (pointer: fine) {
+            * { cursor: none; }
+            .cursor-dot {
+                width: 6px; height: 6px; background: var(--primary);
+                position: fixed; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; z-index: 20000;
+            }
+            .cursor-outline {
+                width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.5);
+                position: fixed; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; 
+                z-index: 20000; transition: width 0.2s, height 0.2s, background 0.2s;
+            }
+            body.hovering .cursor-outline {
+                width: 60px; height: 60px; border-color: var(--primary);
+                background: rgba(255, 0, 60, 0.1); mix-blend-mode: difference;
+            }
+        }
+        @media (hover: none) { .cursor-dot, .cursor-outline { display: none; } }
+
+        /* --- 5. NAV --- */
+        nav {
+            padding: 20px 5%; display: flex; justify-content: space-between; align-items: center;
+            position: fixed; width: 100%; top: 0; z-index: 100;
+            background: rgba(5,5,5,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid #222;
+        }
+        .logo { font-family: var(--font-head); font-size: 1.5rem; text-decoration: none; color: white; letter-spacing: -1px; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-item { color: var(--silver-dim); text-decoration: none; font-size: 0.9rem; transition: 0.3s; }
+        .nav-item:hover { color: var(--primary); }
+
+        /* --- 6. HERO SECTION & POLICE TAPE --- */
+        .hero {
+            min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+            padding: 0 10%; position: relative; overflow: hidden;
+        }
+        .hero-content {
+            position: relative; z-index: 5; margin-top: -15vh; /* Naik sedikit agar tape terlihat jelas */
+        }
+        .hero h1 {
+            font-family: var(--font-head); font-size: clamp(3rem, 8vw, 7rem);
+            line-height: 0.9; margin-bottom: 1.5rem; color: white;
+        }
+        .hero h1 span.outline { color: transparent; -webkit-text-stroke: 2px var(--silver); }
+        .gradient-text {
+            background: linear-gradient(90deg, #ffffff, #888888);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* NEW: Police Tape Decoration */
+        .police-tape-container {
+            position: absolute;
+            bottom: 8%;
+            left: -10vw;
+            width: 120vw;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .tape {
+            font-family: var(--font-head);
+            font-size: 2.2rem;
+            padding: 10px 0;
+            display: flex;
+            white-space: nowrap;
+        }
+        .tape-1 {
+            background: var(--primary); color: black;
+            transform: rotate(-3deg);
+            box-shadow: 0 10px 30px rgba(255, 0, 60, 0.4);
+        }
+        .tape-2 {
+            background: #000; color: var(--primary);
+            border-top: 3px solid var(--primary); border-bottom: 3px solid var(--primary);
+            transform: rotate(2deg);
+        }
+        
+        .tape-text { display: inline-block; animation: marquee 20s linear infinite; }
+        .tape-text-reverse { display: inline-block; animation: marquee-reverse 20s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes marquee-reverse { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+        
+        /* --- 7. GENERAL SECTIONS --- */
+        .section-padding { padding: 80px 10%; position: relative; z-index: 10; background: var(--bg-color); }
+        .section-header {
+            display: flex; align-items: center; gap: 20px; margin-bottom: 50px;
+            border-bottom: 2px solid #222; padding-bottom: 15px;
+        }
+        .section-num { font-family: var(--font-head); font-size: 2rem; color: var(--primary); }
+        .section-title { font-family: var(--font-head); font-size: 2rem; color: white; letter-spacing: 1px; }
+
+        /* --- 8. IDENTITY (AUTHENTIC ROBLOX PANEL) --- */
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .about-text h3 { font-size: 1.8rem; margin-bottom: 20px; color: white; line-height: 1.4; }
+        .about-text p { font-size: 1rem; line-height: 1.6; color: #aaa; margin-bottom: 20px; }
+        
+        .roblox-id-container { perspective: 1000px; width: 100%; max-width: 450px; margin: 0 auto; }
+        
+        .rbx-card-authentic {
+            background-color: #232527; border-radius: 8px; overflow: hidden;
+            font-family: var(--font-roblox); box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 0 1px #393b3d;
+            transform-style: preserve-3d; transition: transform 0.1s;
+        }
+        .rbx-banner { height: 120px; background: #111; position: relative; overflow: hidden; }
+        .rbx-banner-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: 0.3s; }
+        .rbx-card-authentic:hover .rbx-banner-img { opacity: 1; }
+        .rbx-avatar-section {
+            padding: 0 20px; position: relative; display: flex; justify-content: space-between; align-items: flex-end; margin-top: -50px;
+        }
+        .rbx-avatar-wrapper { position: relative; width: 100px; height: 100px; }
+        .rbx-avatar { width: 100%; height: 100%; border-radius: 50%; border: 4px solid #232527; background: #111; object-fit: cover; }
+        .rbx-online-dot {
+            position: absolute; bottom: 5px; right: 5px; width: 18px; height: 18px; 
+            background-color: #00b06f; border-radius: 50%; border: 3px solid #232527;
+        }
+        .rbx-actions { display: flex; gap: 10px; margin-bottom: 10px; }
+        .rbx-btn-circle {
+            width: 36px; height: 36px; border-radius: 50%; background: #393b3d; 
+            border: none; color: white; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s;
+        }
+        .rbx-btn-circle:hover { background: #4f5459; }
+
+        .rbx-info-section { padding: 15px 20px; }
+        .rbx-display-name { font-size: 1.5rem; font-weight: 700; color: white; display: flex; align-items: center; gap: 8px; }
+        .rbx-verified-icon { width: 18px; height: 18px; fill: #ffffff; opacity: 0.8; }
+        .rbx-username { font-size: 0.9rem; color: #b8b8b8; margin-bottom: 15px; }
+        .rbx-bio { font-size: 0.9rem; color: white; line-height: 1.5; margin-bottom: 20px; }
+        .rbx-stats { display: flex; gap: 20px; border-top: 1px solid #393b3d; padding-top: 15px; }
+        .rbx-stat { display: flex; flex-direction: column; }
+        .rbx-stat-num { font-size: 1rem; font-weight: 700; color: white; }
+        .rbx-stat-text { font-size: 0.75rem; color: #b8b8b8; font-weight: 500; }
+
+        .btn-view-profile {
+            display: block; width: calc(100% - 40px); margin: 0 20px 20px;
+            padding: 12px; text-align: center; font-family: var(--font-roblox); font-weight: 600;
+            border-radius: 8px; text-decoration: none; transition: 0.3s;
+        }
+
+        /* --- 9. PROJECT BOMB (EXPLOSIVE ARCHIVES) - FULLY FIXED --- */
+        .archive-container {
+            position: relative; min-height: 650px;
+            display: flex; justify-content: center; align-items: center;
+            overflow: visible;
+        }
+
+        .bomb-trigger {
+            width: 180px; height: 180px; border-radius: 50%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer; z-index: 10; transition: transform 0.4s var(--ease-smooth), opacity 0.4s;
+            box-shadow: 0 0 30px rgba(255, 0, 60, 0.4); font-family: var(--font-head);
+        }
+        .bomb-trigger:hover { transform: scale(1.1); box-shadow: 0 0 50px rgba(255, 0, 60, 0.8); }
+        .bomb-trigger i { font-size: 3rem; margin-bottom: 10px; }
+
+        /* Item Ledakan - Fix Animasi */
+        .archive-item {
+            position: absolute; width: 130px; height: 130px;
+            background: rgba(15, 15, 15, 0.9); border: 1px solid var(--primary); border-radius: 15px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 15px; color: white;
+            
+            /* Menggunakan Variable untuk koordinat X dan Y */
+            --tx: 0px; --ty: 0px;
+            opacity: 0; 
+            transform: translate(var(--tx), var(--ty)) scale(0) rotate(-180deg);
+            pointer-events: none; z-index: 5;
+            transition: transform 0.8s var(--ease-elastic), opacity 0.6s ease, background 0.3s, box-shadow 0.3s;
+            box-shadow: inset 0 0 15px rgba(255,0,60,0.1);
+        }
+
+        /* Efek Hover dengan mempertahankan variable posisi */
+        .archive-item:hover {
+            background: var(--primary); color: black; z-index: 20; cursor: pointer;
+            box-shadow: 0 10px 40px rgba(255,0,60,0.6);
+        }
+        .archive-item i { font-size: 2rem; margin-bottom: 10px; color: var(--primary); transition: 0.3s; }
+        .archive-item:hover i { color: black; }
+        .archive-item h4 { font-family: var(--font-head); font-size: 0.85rem; line-height: 1.2; }
+
+        /* State Meledak Desktop */
+        .archive-container.active .bomb-trigger { transform: scale(0); opacity: 0; pointer-events: none; }
+        
+        .archive-container.active .archive-item { 
+            opacity: 1; pointer-events: all; 
+            transform: translate(var(--tx), var(--ty)) scale(1) rotate(0deg); 
+            animation: floatItem 4s ease-in-out infinite alternate; 
+        }
+        
+        /* Fix Hover Scale tanpa reset transform */
+        .archive-container.active .archive-item:hover {
+            transform: translate(var(--tx), var(--ty)) scale(1.1) rotate(0deg);
+        }
+
+        @keyframes floatItem { 0% { margin-top: 0px; } 100% { margin-top: -15px; } }
+
+        /* Tombol Sedot Kembali (Lock Archives) */
+        .reset-bomb {
+            position: absolute; bottom: 0; left: 50%; transform: translateX(-50%) translateY(30px);
+            background: var(--bg-secondary); border: 1px solid var(--silver-dim); color: var(--silver);
+            padding: 10px 30px; font-family: var(--font-head); cursor: pointer;
+            opacity: 0; pointer-events: none; transition: 0.5s var(--ease-smooth); z-index: 10;
+        }
+        .archive-container.active .reset-bomb { opacity: 1; pointer-events: all; transform: translateX(-50%) translateY(0); }
+        .reset-bomb:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* --- 10. MODAL GALLERY (CYBER POP-UP) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(8px);
+            z-index: 10000; display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: 0.4s;
+        }
+        .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+        .modal-content {
+            width: 90%; max-width: 1000px; height: 80vh; background: #0a0a0a; border: 1px solid var(--primary);
+            display: grid; grid-template-rows: 60px 1fr 80px; 
+            opacity: 0; transform: scale(0.8) translateY(50px); filter: blur(10px);
+            box-shadow: 0 0 50px rgba(255,0,60,0.1);
+        }
+        .modal-overlay.open .modal-content { animation: cyberPop 0.6s var(--ease-elastic) forwards; }
+        @keyframes cyberPop { to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); } }
+
+        .modal-header, .modal-footer { background: #000; padding: 0 30px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222; }
+        .modal-footer { border-top: 1px solid #222; border-bottom: none; color: #888; }
+        .modal-title { font-family: var(--font-head); font-size: 1.5rem; color: white; }
+        .modal-close { color: #666; font-size: 1.5rem; cursor: pointer; transition: 0.3s; }
+        .modal-close:hover { color: var(--primary); transform: rotate(90deg); }
+
+        .gallery-viewport { position: relative; overflow: hidden; background: #111; height: 100%; }
+        .gallery-track { display: flex; height: 100%; transition: transform 0.5s var(--ease-smooth); }
+        .gallery-slide { min-width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+        .gallery-img { max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #333; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+
+        .slider-btn { 
+            position: absolute; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; 
+            background: rgba(0,0,0,0.7); color: white; border: 1px solid #333; border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; 
+        }
+        .slider-btn:hover { background: var(--primary); border-color: var(--primary); transform: translateY(-50%) scale(1.1); box-shadow: 0 0 20px rgba(255,0,60,0.5); }
+        .prev-btn { left: 20px; } .next-btn { right: 20px; }
+
+        /* --- 11. UPLINK / SOCIALS --- */
+        .social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .social-card {
+            background: #111; border: 1px solid #222; padding: 30px;
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
+            color: white; text-decoration: none; transition: 0.3s; cursor: pointer;
+        }
+        .social-card:hover { transform: translateY(-5px); border-color: var(--primary); background: rgba(255,0,60,0.05); }
+        .social-card i { font-size: 2.5rem; }
+        .social-card span { font-family: var(--font-head); }
+        
+        .discord-card { background: #5865F2; border: none; grid-column: span 3; flex-direction: row; justify-content: space-between; padding: 40px; position: relative; overflow: hidden; }
+        .discord-card:hover { background: #4752C4; border-color: transparent; }
+        .discord-card i { font-size: 4rem; }
+
+        footer { text-align: center; padding: 40px; border-top: 1px solid #222; color: #555; }
+
+        /* --- 12. RESPONSIVE MOBILE FIXES --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3.5rem; }
+            .hero-content { margin-top: 0; }
+            
+            /* Menyesuaikan Police Tape di Mobile */
+            .police-tape-container { bottom: 5%; left: -20vw; width: 140vw; }
+            .tape { font-size: 1.5rem; padding: 8px 0; }
+            
+            .about-grid { grid-template-columns: 1fr; }
+            .roblox-id-container { perspective: none; }
+            .rbx-card-authentic { transform: none !important; }
+            
+            /* BUG FIX: Sistem Grid Project Archive Untuk Mobile */
+            .archive-container { 
+                min-height: auto; 
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+                padding: 20px 0; 
+            }
+            .bomb-trigger { margin: 0 auto 40px; width: 150px; height: 150px; }
+            
+            /* Reset & Format Grid */
+            .archive-container.active { 
+                display: grid; 
+                grid-template-columns: 1fr 1fr; 
+                gap: 15px; 
+                width: 100%;
+            }
+            
+            /* Hapus absolute dan reset transform agar item rapi dalam grid */
+            .archive-container.active .archive-item {
+                position: relative !important; 
+                width: 100% !important; 
+                height: 120px !important; 
+                transform: scale(1) rotate(0deg) !important;
+                opacity: 1 !important; 
+                pointer-events: all; 
+                animation: popMobile 0.5s var(--ease-elastic) forwards;
+            }
+            
+            /* Hover di HP (Tap) */
+            .archive-container.active .archive-item:hover {
+                transform: scale(1.05) rotate(0deg) !important;
+            }
+            
+            .archive-container.active .bomb-trigger { display: none; }
+            
+            /* FIX TOMBOL RESET: Memasukkan ke flow normal (tidak berantakan) */
+            .reset-bomb { 
+                position: relative !important; 
+                left: auto !important; 
+                bottom: auto !important; 
+                transform: none !important; 
+                width: 100% !important; 
+                grid-column: span 2; /* Mengisi penuh 2 kolom */
+                margin-top: 15px !important;
+            }
+            
+            @keyframes popMobile { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
+            
+            .social-grid { grid-template-columns: 1fr; }
+            .discord-card { grid-column: span 1; flex-direction: column; text-align: center; }
+            nav { padding: 20px; } .nav-links { display: none; }
+            .section-padding { padding: 40px 5%; }
+        }
+    </style>
+</head>
+<body class="custom-cursor-area">
+
+    <!-- Matrix Background -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Overlay & Cursor -->
+    <div class="crt-overlay"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <nav>
+        <a href="#" class="logo" data-hover>Bachtiaraditya<span class="text-primary">_</span></a>
+        <div class="nav-links">
+            <a href="#about" class="nav-item" data-hover>Identity</a>
+            <a href="#projects" class="nav-item" data-hover>Archives</a>
+            <a href="#uplink" class="nav-item" data-hover>Uplink</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hacker-text text-primary" style="margin-bottom: 10px; font-size: 0.9rem; letter-spacing: 2px;">This site only show me and</div>
+            <h1>
+                <span class="gradient-text">ROBLOX</span> <br>
+                <span class="outline">Developer</span>
+            </h1>
+            <div style="max-width: 500px; color: #888; line-height: 1.6; margin-bottom: 30px;">
+                Selamat Datang di Portofolio saya, <span style="color:white">Nama Saya Bachtiar / Adit, </span>dan sering di panggil <span style="color:white">Tahu bulat</span>
+            </div>
+        </div>
+
+        <!-- NEW: Police Tape Decoration (Anti-Kopong) -->
+        <div class="police-tape-container">
+            <div class="tape tape-1">
+                <div class="tape-text">
+                    <span>/// LUA SCRIPTING /// UI/UX DESIGN /// HUSTLER /// ROBLOX STUDIO /// GAME MECHANICS </span>
+                    <span>/// LUA SCRIPTING /// UI/UX DESIGN /// HUSTLER /// ROBLOX STUDIO /// GAME MECHANICS </span>
+                </div>
+            </div>
+            <div class="tape tape-2">
+                <div class="tape-text-reverse">
+                    <span>/// BUILDING TERRAIN /// PROBLEM SOLVING /// BUILDING PART /// OPTIMIZATION </span>
+                    <span>/// BUILDING TERRAIN /// PROBLEM SOLVING /// BUILDING PART /// OPTIMIZATION </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IDENTITY (AUTHENTIC ROBLOX PANEL) -->
+    <section id="about" class="section-padding">
+        <div class="section-header">
+            <span class="section-num">01</span>
+            <h2 class="section-title hacker-text" data-value="IDENTITY">IDENTITY</h2>
+        </div>
+        
+        <div class="about-grid">
+            <div class="about-text">
+                <h3>Dari refrensi jadilah ide gila.</h3>
+                <p>Sejak saya umur 13 tahun, saya sudah tertarik dengan dunia game, dan saya selalu berusaha yang terbaik untuk di setiap game, tetapi cara yang saya pakai berbeda, Saya bisa di sebut seorang Cheater/Exploiter, semua game yang saya mainkan pernah saya cheat semua, saya juga pernah menjadi reseller cheat dan creator cheat, tapi semua itu sudah berlalu karena saya sudah tidak mengejar kemenangan lagi.
+
+kita lanjut di roblox, saya sudah bermain roblox studio kurang lebih 2/3 tahun lebih, sejak 2021 sempat pensi dan comeback tahun 2024 akhir tahun, bisa di bilang saya cukup mahir dalam membuat map kalau ada refrensi yang tepat di otak saya.</p>
+                <a href="#projects" class="btn-shine" style="display:inline-block; padding: 12px 30px; text-decoration: none; font-family: var(--font-head); font-size: 0.9rem; margin-top: 20px;" data-hover>VIEW PROJECT</a>
+            </div>
+            
+            <div class="roblox-id-container">
+                <div class="rbx-card-authentic" id="tilt-card">
+                    <div class="rbx-banner">
+                        <!-- GANTI LINK GAMBAR BANNER DI BAWAH INI -->
+                        <img src="https://tr.rbxcdn.com/180DAY-31fd945893bed23773b60d3ea8c2e5fe/1440/456/Image/Png/noFilter" alt="Banner" class="rbx-banner-img">
+                    </div>
+                    
+                    <div class="rbx-avatar-section">
+                        <div class="rbx-avatar-wrapper">
+                            <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-A9C907725D4796C61A65CFC47D4149DB-Png/150/150/AvatarHeadshot/Webp/noFilter" alt="Avatar" class="rbx-avatar">
+                            <div class="rbx-online-dot"></div>
+                        </div>
+                        <div class="rbx-actions">
+                            <button class="rbx-btn-circle" title="Message" data-hover><i class="fa-regular fa-message"></i></button>
+                            <button class="rbx-btn-circle" title="More" data-hover><i class="fa-solid fa-ellipsis"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="rbx-info-section">
+                        <div class="rbx-display-name">
+                            TahuBulat
+                            <svg class="rbx-verified-icon" viewBox="0 0 24 24"><path d="M11.233 1.841a1.5 1.5 0 0 1 1.534 0l1.696 1a1.5 1.5 0 0 0 1.058.196l1.93-.418a1.5 1.5 0 0 1 1.764 1.107l.542 1.898a1.5 1.5 0 0 0 .807.973l1.785.836a1.5 1.5 0 0 1 .808 1.921l-.736 1.832a1.5 1.5 0 0 0 0 1.074l.736 1.832a1.5 1.5 0 0 1-.808 1.921l-1.785.836a1.5 1.5 0 0 0-.807.973l-.542 1.898a1.5 1.5 0 0 1-1.764 1.107l-1.93-.418a1.5 1.5 0 0 0-1.058.196l-1.696 1a1.5 1.5 0 0 1-1.534 0l-1.696-1a1.5 1.5 0 0 0-1.058-.196l-1.93.418a1.5 1.5 0 0 1-1.764-1.107l-.542-1.898a1.5 1.5 0 0 0-.807-.973l-1.785-.836a1.5 1.5 0 0 1-.808-1.921l.736-1.832a1.5 1.5 0 0 0 0-1.074l-.736-1.832a1.5 1.5 0 0 1 .808-1.921l1.785-.836a1.5 1.5 0 0 0 .807-.973l.542-1.898a1.5 1.5 0 0 1 1.764-1.107l1.93.418a1.5 1.5 0 0 0 1.058-.196l1.696-1Zm-1.127 12.33 5.484-5.485a.75.75 0 1 0-1.06-1.061l-4.954 4.954-2.454-2.454a.75.75 0 1 0-1.06 1.06l2.984 2.985a.75.75 0 0 0 1.06 0Z"></path></svg>
+                        </div>
+                        <div class="rbx-username">@Synxsixz</div>
+                        <div class="rbx-bio">Solo dev | 2021 - 2026 | Total Visit : 5m+ |
+                            Founder Aih Gank / Aih Studio
+                        </div>
+                        
+                        <div class="rbx-stats">
+                            <div class="rbx-stat"><span class="rbx-stat-num">145</span><span class="rbx-stat-text">Friends</span></div>
+                            <div class="rbx-stat"><span class="rbx-stat-num">211</span><span class="rbx-stat-text">Followers</span></div>
+                            <div class="rbx-stat"><span class="rbx-stat-num">2</span><span class="rbx-stat-text">Following</span></div>
+                        </div>
+                    </div>
+
+                    <a href="https://www.roblox.com/id/users/2052284827/profile" target="_blank" class="btn-shine btn-view-profile" data-hover>View Full Profile</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECT BOMB SYSTEM (MOBILE BUG FIXED) -->
+    <section id="projects" class="section-padding">
+        <div class="section-header">
+            <span class="section-num">02</span>
+            <h2 class="section-title hacker-text" data-value="ARCHIVE_VAULT">MY_PROJECT</h2>
+        </div>
+
+        <div class="archive-container" id="archive-zone">
+            
+            <!-- TRIGGER BOMB -->
+            <div class="bomb-trigger btn-shine" id="bomb-btn" data-hover>
+                <i class="fa-solid fa-fingerprint"></i>
+                <span style="letter-spacing: 2px;">DECRYPT</span>
+            </div>
+
+            <!-- ITEMS -->
+            <div class="archive-item" data-hover data-title="FRIST_COLLAB" data-desc="Design Collab pertama saya yang saya buat dan langsung di setujui" data-images='["https://i.ibb.co.com/Txp4g25G/Screenshot-2026-03-20-124802.png", "https://i.ibb.co.com/bR1TYywN/Screenshot-2026-03-24-192447.png"]'>
+                <i class="fa-solid fa-map-location-dot"></i><h4>FRIST_COLLAB</h4>
+            </div>
+
+            <div class="archive-item" data-hover data-title="GUI / UI UX" data-desc="Saya tidak jago di gui, dan saya masih belajar sampai sekarang" data-images='["https://i.ibb.co.com/20sVHxDv/Screenshot-2026-03-30-151603.png", "https://i.ibb.co.com/C3Qp0YVd/Screenshot-2026-03-30-151858.png", "https://i.ibb.co.com/27VMmnk3/Screenshot-2026-03-30-152407.png", "https://i.ibb.co.com/HTNgm1MG/Screenshot-2026-03-30-151923.png"]'>
+                <i class="fa-solid fa-layer-group"></i><h4>GUI / UI UX</h4>
+            </div>
+
+            <div class="archive-item" data-hover data-title="BUILD" data-desc="ini adalah build saya yang ada di map mie ayam sidoarjo ( fun fact, build itu terdiri dari 82% free model yang masing2 model terpisah )" data-images='["https://i.ibb.co.com/WptDggSF/Screenshot-2026-03-30-151036.png", "https://i.ibb.co.com/XfJ5pG1p/Screenshot-2026-03-30-151049.png"]'>
+                <i class="fa-solid fa-cube"></i><h4>BUILD</h4>
+            </div>
+
+            <div class="archive-item" data-hover data-title="MY WORK" data-desc="Beberapa Map dari 2021-2026 ( ada yang sudah terjual )" data-images='["https://i.ibb.co.com/twpByKDb/Screenshot-2026-03-30-155356.png", "https://i.ibb.co.com/WpVxXBQ8/Screenshot-2026-03-30-155229.png", "https://i.ibb.co.com/LX1v9SFg/Screenshot-2026-03-30-155257.png", "https://i.ibb.co.com/B5GW20JS/Screenshot-2026-03-30-155213.png", "https://i.ibb.co.com/8p5BH7Q/Screenshot-2026-03-30-155149.png"]'>
+                <i class="fa-solid fa-gamepad"></i><h4>MY WORK</h4>
+            </div>
+
+            <div class="archive-item" data-hover data-title="GALLERY" data-desc="Random Gallery dari karya karya saya" data-images='["https://i.ibb.co.com/GQBzFtbB/Screenshot-2026-03-30-161750.png", "https://i.ibb.co.com/PZd7HV7C/Screenshot-2026-03-30-161640.png", "https://i.ibb.co.com/cKmz5fzD/Screenshot-2026-02-13-174825.png", "https://i.ibb.co.com/KpJwf1yJ/Screenshot-2026-02-15-070445.png", "https://i.ibb.co.com/HvBfvsF/Screenshot-2026-02-14-205657.png", "https://i.ibb.co.com/0VrKsg8q/Screenshot-2026-02-14-115745.png", "https://i.ibb.co.com/4ZZ0Bh3f/Screenshot-2026-02-14-115756.png", "https://i.ibb.co.com/4w3PRpjc/Screenshot-2026-02-14-115826.png", "https://i.ibb.co.com/5h7SVxgJ/Screenshot-2026-02-13-172440.png", "https://i.ibb.co.com/nswFPQDr/Screenshot-2026-02-13-171549.png", "https://i.ibb.co.com/YBMcrSgQ/Screenshot-2026-02-16-063438.png", "https://i.ibb.co.com/rGm9Rrcy/Screenshot-2026-03-08-123308.png", "https://i.ibb.co.com/9k4WzR3H/Screenshot-2026-01-12-172237.png", "https://i.ibb.co.com/HDr35CDX/Screenshot-2025-12-28-180527.png", "https://i.ibb.co.com/Y79P08vt/Screenshot-2026-01-30-175806.png"]'>
+                <i class="fa-solid fa-wand-magic-sparkles"></i><h4>GALLERY</h4>
+            </div>
+
+            <div class="archive-item" data-hover data-title="NPCMANAGER" data-desc="Saya memiliki kebiasaan unik dalam pengembangan Debugging. Saya selalu mengintegrasikan sistem print-tracking dan error-code logging yang detail di setiap modul penting. " data-images='["https://i.ibb.co.com/8gv3gHKs/Screenshot-2026-03-30-153254.png",  "https://i.ibb.co.com/chY2ryJ9/Screenshot-2026-03-30-153830.png"]'>
+                <i class="fa-solid fa-code"></i><h4>NPC_MANAGER</h4>
+            </div>
+
+            <div class="reset-bomb" id="reset-btn" data-hover>
+                <i class="fa-solid fa-lock"></i> LOCK ARCHIVES
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL GALLERY (CYBER POP-UP) -->
+    <div class="modal-overlay" id="project-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title hacker-text" id="modal-title" data-value="TITLE">TITLE</div>
+                <div class="modal-close" id="modal-close"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+            <div class="gallery-viewport">
+                <div class="gallery-track" id="gallery-track"></div>
+                <div class="slider-btn prev-btn" id="prev-slide"><i class="fa-solid fa-chevron-left"></i></div>
+                <div class="slider-btn next-btn" id="next-slide"><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+            <div class="modal-footer">
+                <div id="modal-desc">Description goes here...</div>
+            </div>
+        </div>
+    </div>
+
+<section id="uplink" class="section-padding">
+        <div class="section-header">
+            <span class="section-num">03</span>
+            <h2 class="section-title hacker-text" data-value="UPLINK">UPLINK</h2>
+        </div>
+
+        <div class="social-grid">
+            <div class="social-card discord-card" id="discord-btn" data-discord="bachadit" data-hover>
+                <div>
+                    <h3 style="font-family: var(--font-head); font-size: 2rem;">DISCORD : bachadit</h3>
+                    <p style="opacity: 0.8; font-family: var(--font-code); font-size: 0.8rem;">Click to copy ID</p>
+                    <div class="copy-feedback" id="copy-msg">COPIED TO CLIPBOARD!</div>
+                </div>
+                <i class="fa-brands fa-discord"></i>
+            </div>
+            
+            <a href="https://www.youtube.com/@bachtiaradit" target="_blank" class="social-card" data-hover>
+                <i class="fa-brands fa-youtube"></i> <span>YOUTUBE</span>
+            </a>
+            
+            <a href="https://www.instagram.com/bachtiaraditya_?igsh=NmgzNTlqZWNxczFo" target="_blank" class="social-card" data-hover>
+                <i class="fa-brands fa-instagram"></i> <span>INSTAGRAM</span>
+            </a>
+            
+            <a href="https://www.tiktok.com/@bachtiaradit_" target="_blank" class="social-card" data-hover>
+                <i class="fa-brands fa-tiktok"></i> <span>TIKTOK</span>
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <p>2024 by bachtiar</p>
+    </footer>
+
+    <script>
+        // --- MATRIX RAIN ---
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*<>[]{}';
+        const fontSize = 16; const columns = canvas.width / fontSize;
+        const rainDrops = []; for( let x = 0; x < columns; x++ ) rainDrops[x] = 1;
+        
+        const drawMatrix = () => {
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ff003c'; ctx.font = fontSize + 'px monospace';
+            for(let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.globalAlpha = Math.random() * 0.5 + 0.5;
+                ctx.fillText(text, i*fontSize, rainDrops[i]*fontSize);
+                ctx.globalAlpha = 1.0;
+                if(rainDrops[i]*fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
+                rainDrops[i]++;
+            }
+        };
+        setInterval(drawMatrix, 35);
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+        // --- HACKER TEXT ---
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        document.querySelectorAll('.hacker-text').forEach(item => {
+            item.addEventListener('mouseover', event => {
+                let iterations = 0;
+                const originalText = event.target.dataset.value || event.target.innerText;
+                const interval = setInterval(() => {
+                    event.target.innerText = originalText.split("").map((l, i) => {
+                        if(i < iterations) return originalText[i];
+                        return letters[Math.floor(Math.random() * letters.length)];
+                    }).join("");
+                    if(iterations >= originalText.length) clearInterval(interval);
+                    iterations += 1 / 2;
+                }, 30);
+            });
+        });
+
+        // --- CUSTOM CURSOR & TILT CARD ---
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        const tiltCard = document.getElementById('tilt-card');
+        const tiltContainer = document.querySelector('.roblox-id-container');
+
+        if (window.matchMedia("(pointer: fine)").matches) {
+            window.addEventListener('mousemove', (e) => {
+                const posX = e.clientX; const posY = e.clientY;
+                cursorDot.style.left = `${posX}px`; cursorDot.style.top = `${posY}px`;
+                cursorOutline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 400, fill: "forwards" });
+            });
+
+            if(tiltContainer && tiltCard) {
+                tiltContainer.addEventListener('mousemove', (e) => {
+                    const rect = tiltContainer.getBoundingClientRect();
+                    const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2; const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -12; 
+                    const rotateY = ((x - centerX) / centerX) * 12;
+                    tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                });
+                tiltContainer.addEventListener('mouseleave', () => {
+                    tiltCard.style.transform = `rotateX(0) rotateY(0)`;
+                });
+            }
+        }
+
+        document.querySelectorAll('[data-hover]').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+
+        // --- DISCORD COPY ---
+        const discordBtn = document.getElementById('discord-btn');
+        const copyMsg = document.getElementById('copy-msg');
+        discordBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(discordBtn.getAttribute('data-discord')).then(() => {
+                copyMsg.style.opacity = '1';
+                setTimeout(() => { copyMsg.style.opacity = '0'; }, 2000);
+            });
+        });
+
+        // --- PROJECT BOMB EXPLOSION (MOBILE FIX INCLUDED) ---
+        const bombBtn = document.getElementById('bomb-btn');
+        const archiveZone = document.getElementById('archive-zone');
+        const archiveItems = document.querySelectorAll('.archive-item');
+        const resetBtn = document.getElementById('reset-btn');
+
+        bombBtn.addEventListener('click', () => {
+            archiveZone.classList.add('active');
+            if(window.innerWidth > 768) {
+                const radius = 240; 
+                const total = archiveItems.length;
+                archiveItems.forEach((item, index) => {
+                    const angle = (index / total) * Math.PI * 2; 
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+                    
+                    item.style.setProperty('--tx', `${x}px`);
+                    item.style.setProperty('--ty', `${y}px`);
+                    item.style.transitionDelay = `${index * 0.05}s`;
+                });
+            }
+        });
+
+        // IMPLOSION (Suck Back)
+        resetBtn.addEventListener('click', () => {
+            archiveZone.classList.remove('active');
+            archiveItems.forEach((item) => {
+                item.style.setProperty('--tx', `0px`);
+                item.style.setProperty('--ty', `0px`);
+                item.style.transitionDelay = '0s'; 
+            });
+        });
+
+        // --- MODAL GALLERY ---
+        const modal = document.getElementById('project-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDesc = document.getElementById('modal-desc');
+        const galleryTrack = document.getElementById('gallery-track');
+        const openButtons = document.querySelectorAll('.archive-item');
+        const closeBtn = document.getElementById('modal-close');
+        const nextBtn = document.getElementById('next-slide');
+        const prevBtn = document.getElementById('prev-slide');
+
+        let currentSlide = 0; let totalSlides = 0;
+
+        openButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const title = btn.getAttribute('data-title');
+                const images = JSON.parse(btn.getAttribute('data-images'));
+                
+                modalTitle.textContent = title;
+                modalTitle.setAttribute('data-value', title);
+                modalDesc.textContent = btn.getAttribute('data-desc');
+                
+                galleryTrack.innerHTML = '';
+                currentSlide = 0; totalSlides = images.length;
+                images.forEach(src => {
+                    const slide = document.createElement('div');
+                    slide.className = 'gallery-slide';
+                    slide.innerHTML = `<img src="${src}" class="gallery-img">`;
+                    galleryTrack.appendChild(slide);
+                });
+                updateGallery();
+                modal.classList.add('open');
+            });
+        });
+        
+        closeBtn.addEventListener('click', () => modal.classList.remove('open'));
+        nextBtn.addEventListener('click', () => { currentSlide = (currentSlide + 1) % totalSlides; updateGallery(); });
+        prevBtn.addEventListener('click', () => { currentSlide = (currentSlide - 1 + totalSlides) % totalSlides; updateGallery(); });
+        function updateGallery() { galleryTrack.style.transform = `translateX(-${currentSlide * 100}%)`; }
+
+    </script>
+</body>
+</html>
