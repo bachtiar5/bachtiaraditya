@@ -13,7 +13,9 @@
         href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap"
         rel="stylesheet" media="print" onload="this.media='all'">
     <noscript>
-        <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap"
+            rel="stylesheet">
     </noscript>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -29,7 +31,7 @@
             --primary: #ff003c;
             --primary-dark: #990024;
             --silver: #e0e0e0;
-            --silver-dim: #666666;
+            --silver-dim: #888888;
 
             --font-head: 'Archivo Black', sans-serif;
             --font-code: 'Roboto Mono', monospace;
@@ -58,7 +60,8 @@
 
         body.light-mode .hero h1,
         body.light-mode .section-title,
-        body.light-mode .about-text h3 {
+        body.light-mode .about-text h3,
+        body.light-mode .about-text .about-subtitle {
             color: #111;
         }
 
@@ -153,20 +156,29 @@
         }
 
         @media (max-width: 768px) {
-            * { will-change: auto !important; }
+            * {
+                will-change: auto !important;
+            }
 
-            #matrix-canvas { display: none !important; }
+            #matrix-canvas {
+                display: none !important;
+            }
 
-            .crt-overlay { display: none !important; }
+            .crt-overlay {
+                display: none !important;
+            }
 
-            body::before { display: none !important; }
+            body::before {
+                display: none !important;
+            }
 
             body {
                 background-image: none !important;
                 background-color: var(--bg-color);
             }
 
-            .tape-text, .tape-text-reverse {
+            .tape-text,
+            .tape-text-reverse {
                 animation-duration: 30s;
             }
 
@@ -180,7 +192,7 @@
 
             .border-glow-card::before,
             .border-glow-card::after,
-            .border-glow-card > .edge-light {
+            .border-glow-card>.edge-light {
                 display: none !important;
             }
         }
@@ -359,6 +371,10 @@
             cursor: pointer;
             z-index: 101;
             transition: color 0.5s ease;
+            background: none;
+            border: none;
+            padding: 0;
+            line-height: 1;
         }
 
         body.light-mode .menu-toggle {
@@ -524,11 +540,13 @@
             align-items: center;
         }
 
-        .about-text h3 {
+        .about-text h3,
+        .about-text .about-subtitle {
             font-size: 1.8rem;
             margin-bottom: 20px;
             color: white;
             line-height: 1.4;
+            font-family: var(--font-head);
             transition: color 0.5s ease;
         }
 
@@ -1364,6 +1382,7 @@
                 flex-direction: column;
                 text-align: center;
             }
+
             .menu-toggle {
                 display: block;
             }
@@ -1428,24 +1447,26 @@
     <div class="cursor-dot"></div>
     <div class="cursor-outline"></div>
 
-    <nav>
-        <a href="#" class="logo" data-hover>Bachtiaraditya<span class="text-primary">_</span></a>
-        
-        <div class="menu-toggle" id="mobile-menu-toggle" data-hover>
-            <i class="fas fa-bars"></i>
-        </div>
+    <nav aria-label="Navigasi utama">
+        <a href="#home" class="logo" data-hover aria-label="Bachtiaraditya - ke halaman utama">Bachtiaraditya<span class="text-primary" aria-hidden="true">_</span></a>
 
-        <div class="nav-links" id="nav-links">
-            <a href="#about" class="nav-item mobile-nav-link" data-hover>Identity</a>
-            <a href="#projects" class="nav-item mobile-nav-link" data-hover>Archives</a>
-            <a href="#uplink" class="nav-item mobile-nav-link" data-hover>Uplink</a>
+        <button class="menu-toggle" id="mobile-menu-toggle" data-hover aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="nav-links">
+            <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
+
+        <div class="nav-links" id="nav-links" role="menu">
+            <a href="#about" class="nav-item mobile-nav-link" data-hover role="menuitem">Identity</a>
+            <a href="#projects" class="nav-item mobile-nav-link" data-hover role="menuitem">Archives</a>
+            <a href="#uplink" class="nav-item mobile-nav-link" data-hover role="menuitem">Uplink</a>
         </div>
     </nav>
 
+    <main id="main-content">
+
     <section class="hero" id="home">
         <div class="hero-content">
-            <div class="hacker-text text-primary" style="margin-bottom: 10px; font-size: 0.9rem; letter-spacing: 2px;">
-                This site only show me and</div>
+            <p class="hacker-text text-primary" style="margin-bottom: 10px; font-size: 0.9rem; letter-spacing: 2px;">
+                This site only show me and</p>
             <h1>
                 <span class="gradient-text">ROBLOX</span> <br>
                 <span class="outline">Developer</span>
@@ -1481,7 +1502,7 @@
 
         <div class="about-grid">
             <div class="about-text">
-                <h3>Dari refrensi jadilah ide gila.</h3>
+                <p class="about-subtitle">Dari refrensi jadilah ide gila.</p>
                 <p>Sejak saya umur 13 tahun, saya sudah tertarik dengan dunia game, dan saya selalu berusaha yang
                     terbaik untuk di setiap game, tetapi cara yang saya pakai berbeda, Saya bisa di sebut seorang
                     Cheater/Exploiter, semua game yang saya mainkan pernah saya cheat semua, saya juga pernah menjadi
@@ -1511,10 +1532,10 @@
                                 <div class="rbx-online-dot"></div>
                             </div>
                             <div class="rbx-actions">
-                                <button class="rbx-btn-circle" title="Message" data-hover><i
-                                        class="fa-regular fa-message"></i></button>
-                                <button class="rbx-btn-circle" title="More" data-hover><i
-                                        class="fa-solid fa-ellipsis"></i></button>
+                                <button class="rbx-btn-circle" title="Message" aria-label="Kirim pesan" data-hover><i
+                                        class="fa-regular fa-message" aria-hidden="true"></i></button>
+                                <button class="rbx-btn-circle" title="More" aria-label="Lebih banyak opsi" data-hover><i
+                                        class="fa-solid fa-ellipsis" aria-hidden="true"></i></button>
                             </div>
                         </div>
 
@@ -1643,20 +1664,22 @@
                 <i class="fa-brands fa-discord"></i>
             </div>
 
-            <a href="https://www.youtube.com/@bachtiaradit" target="_blank" class="social-card" data-hover>
-                <i class="fa-brands fa-youtube"></i> <span>YOUTUBE</span>
+            <a href="https://www.youtube.com/@bachtiaradit" target="_blank" rel="noopener noreferrer" class="social-card" aria-label="Kunjungi channel YouTube saya" data-hover>
+                <i class="fa-brands fa-youtube" aria-hidden="true"></i> <span>YOUTUBE</span>
             </a>
 
-            <a href="https://www.instagram.com/bachtiaraditya_?igsh=NmgzNTlqZWNxczFo" target="_blank"
-                class="social-card" data-hover>
-                <i class="fa-brands fa-instagram"></i> <span>INSTAGRAM</span>
+            <a href="https://www.instagram.com/bachtiaraditya_?igsh=NmgzNTlqZWNxczFo" target="_blank" rel="noopener noreferrer"
+                class="social-card" aria-label="Kunjungi Instagram saya" data-hover>
+                <i class="fa-brands fa-instagram" aria-hidden="true"></i> <span>INSTAGRAM</span>
             </a>
 
-            <a href="https://www.tiktok.com/@bachtiaradit_" target="_blank" class="social-card" data-hover>
-                <i class="fa-brands fa-tiktok"></i> <span>TIKTOK</span>
+            <a href="https://www.tiktok.com/@bachtiaradit_" target="_blank" rel="noopener noreferrer" class="social-card" aria-label="Kunjungi TikTok saya" data-hover>
+                <i class="fa-brands fa-tiktok" aria-hidden="true"></i> <span>TIKTOK</span>
             </a>
         </div>
     </section>
+
+    </main>
 
     <footer>
         <p>2024 by bachtiar</p>
@@ -1664,17 +1687,17 @@
 
     <div class="dock-container">
         <div class="dock-panel" id="mac-dock">
-            <a href="#home" class="dock-item" data-label="Home" data-hover>
-                <i class="fa-solid fa-house"></i>
+            <a href="#home" class="dock-item" data-label="Home" aria-label="Ke bagian Beranda" data-hover>
+                <i class="fa-solid fa-house" aria-hidden="true"></i>
             </a>
-            <a href="#about" class="dock-item" data-label="Identity" data-hover>
-                <i class="fa-solid fa-user"></i>
+            <a href="#about" class="dock-item" data-label="Identity" aria-label="Ke bagian Identity" data-hover>
+                <i class="fa-solid fa-user" aria-hidden="true"></i>
             </a>
-            <a href="#projects" class="dock-item" data-label="Archives" data-hover>
-                <i class="fa-solid fa-box-archive"></i>
+            <a href="#projects" class="dock-item" data-label="Archives" aria-label="Ke bagian Archives" data-hover>
+                <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
             </a>
-            <div class="dock-item" id="theme-toggle" data-label="Light Mode" data-hover>
-                <i class="fa-solid fa-sun" id="theme-icon"></i>
+            <div class="dock-item" id="theme-toggle" data-label="Light Mode" aria-label="Ganti tema" role="button" tabindex="0" data-hover>
+                <i class="fa-solid fa-sun" id="theme-icon" aria-hidden="true"></i>
             </div>
         </div>
     </div>
@@ -1717,13 +1740,17 @@
 
         if (menuToggle) {
             menuToggle.addEventListener('click', () => {
-                navLinks.classList.toggle('active');
+                const isOpen = navLinks.classList.toggle('active');
+                menuToggle.setAttribute('aria-expanded', isOpen);
+                menuToggle.setAttribute('aria-label', isOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi');
             });
         }
         mobileNavLinks.forEach(link => {
             link.addEventListener('click', () => {
                 if (navLinks.classList.contains('active')) {
                     navLinks.classList.remove('active');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    menuToggle.setAttribute('aria-label', 'Buka menu navigasi');
                 }
             });
         });
