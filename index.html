@@ -7,11 +7,20 @@
     <title>PortoBachtiar</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto+Mono:wght@300;400;500;700&family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap"
+        rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    </noscript>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </noscript>
 
     <style>
         :root {
@@ -141,6 +150,39 @@
             padding: 0;
             box-sizing: border-box;
             scroll-behavior: smooth;
+        }
+
+        @media (max-width: 768px) {
+            * { will-change: auto !important; }
+
+            #matrix-canvas { display: none !important; }
+
+            .crt-overlay { display: none !important; }
+
+            body::before { display: none !important; }
+
+            body {
+                background-image: none !important;
+                background-color: var(--bg-color);
+            }
+
+            .tape-text, .tape-text-reverse {
+                animation-duration: 30s;
+            }
+
+            .btn-shine::after {
+                animation: none !important;
+            }
+
+            .archive-container.active .archive-item {
+                animation: none !important;
+            }
+
+            .border-glow-card::before,
+            .border-glow-card::after,
+            .border-glow-card > .edge-light {
+                display: none !important;
+            }
         }
 
         body {
@@ -1638,35 +1680,35 @@
     </div>
 
     <script>
-        // --- MATRIX CANVAS (MENDUKUNG LIGHT/DARK MODE) ---
+        // --- MATRIX CANVAS (desktop only) ---
+        const isMobile = window.innerWidth < 768;
         const canvas = document.getElementById('matrix-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*<>[]{}';
-        const fontSize = 16; const columns = canvas.width / fontSize;
-        const rainDrops = []; for (let x = 0; x < columns; x++) rainDrops[x] = 1;
 
-        const drawMatrix = () => {
-            const isLight = document.body.classList.contains('light-mode');
-            ctx.fillStyle = isLight ? 'rgba(240, 240, 240, 0.05)' : 'rgba(5, 5, 5, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (!isMobile) {
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*<>[]{}';
+            const fontSize = 16; const columns = canvas.width / fontSize;
+            const rainDrops = []; for (let x = 0; x < columns; x++) rainDrops[x] = 1;
 
-            ctx.fillStyle = isLight ? '#0066cc' : '#ff003c';
-            ctx.font = fontSize + 'px monospace';
-
-            for (let i = 0; i < rainDrops.length; i++) {
-                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                ctx.globalAlpha = Math.random() * 0.5 + 0.5;
-                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-                ctx.globalAlpha = 1.0;
-                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
-                rainDrops[i]++;
-            }
-        };
-        
-        const matrixIntervalSpeed = window.innerWidth < 768 ? 70 : 35;
-        setInterval(drawMatrix, matrixIntervalSpeed);
-        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+            const drawMatrix = () => {
+                const isLight = document.body.classList.contains('light-mode');
+                ctx.fillStyle = isLight ? 'rgba(240, 240, 240, 0.05)' : 'rgba(5, 5, 5, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = isLight ? '#0066cc' : '#ff003c';
+                ctx.font = fontSize + 'px monospace';
+                for (let i = 0; i < rainDrops.length; i++) {
+                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                    ctx.globalAlpha = Math.random() * 0.5 + 0.5;
+                    ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                    ctx.globalAlpha = 1.0;
+                    if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
+                    rainDrops[i]++;
+                }
+            };
+            setInterval(drawMatrix, 35);
+            window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+        }
 
         // --- MOBILE MENU TOGGLE ---
         const menuToggle = document.getElementById('mobile-menu-toggle');
