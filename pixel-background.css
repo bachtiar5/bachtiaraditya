@@ -1,0 +1,35 @@
+.pixel-heart-play{display:grid;place-items:center;position:relative;padding:0;border:0;background:transparent}.pixel-heart-grid{display:block;position:relative;aspect-ratio:var(--pixel-cols,15)/var(--pixel-rows,12)}.heart-pixel{position:absolute;left:calc(var(--px)*100%/var(--pixel-cols,15));top:calc(var(--py)*100%/var(--pixel-rows,12))}
+/* Faint, interactive miniatures beneath the content. */
+.floating-pixels { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+.floating-pixel { position:absolute; left:var(--float-x); top:var(--float-y); width:var(--float-size); height:var(--float-size); margin:calc(var(--float-size)/-2); opacity:.065; transition:opacity .35s ease; pointer-events:none; }
+.floating-drift { width:100%; height:100%; animation:pixel-zero-gravity var(--float-duration) linear infinite; animation-delay:var(--float-delay); }
+.floating-pixels .pixel-heart-play { width:100%; height:100%; aspect-ratio:1; border-radius:7px; overflow:visible; pointer-events:none; }
+.floating-pixels .pixel-heart-play::before { display:none; }
+.floating-pixels .pixel-heart-grid { width:90%; }
+.floating-pixels .floating-pixel .heart-pixel { width:calc(100%/var(--pixel-cols,15) + .6px); height:calc(100%/var(--pixel-rows,12) + .6px); background:var(--accent); box-shadow:none; }
+.floating-pixel.is-near,.floating-pixel:focus-within { opacity:.15; }
+.floating-pixel.is-breaking { opacity:.13; }
+.floating-pixel.is-breaking .floating-drift,.floating-pixels.is-suspended .floating-drift { animation-play-state:paused; }
+[data-theme=light] .floating-pixel { opacity:.055; }
+[data-theme=light] .floating-pixel.is-near,[data-theme=light] .floating-pixel:focus-within,[data-theme=light] .floating-pixel.is-breaking { opacity:.12; }
+@keyframes pixel-zero-gravity {
+  0% { transform:translate(0,0) rotate(var(--float-angle)); }
+  25% { transform:translate(var(--drift-x1),var(--drift-y1)) rotate(calc(var(--float-angle) + var(--float-turn) * .25)); }
+  50% { transform:translate(var(--drift-x2),var(--drift-y2)) rotate(calc(var(--float-angle) + var(--float-turn) * .5)); }
+  75% { transform:translate(var(--drift-x3),var(--drift-y3)) rotate(calc(var(--float-angle) + var(--float-turn) * .75)); }
+  100% { transform:translate(0,0) rotate(calc(var(--float-angle) + var(--float-turn))); }
+}
+@media(max-width:640px) {
+ .floating-pixel { left:var(--float-mobile-x); top:var(--float-mobile-y); width:70px; height:70px; margin:-35px; opacity:.055; }
+ .floating-pixel[data-float-index="2"],.floating-pixel[data-float-index="3"] { display:none; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .floating-drift { animation:none; transform:rotate(var(--float-angle)); }
+ .floating-pixel { transition:none; }
+}
+/* Let fragments leave the artwork instead of clipping the burst inside its button. */
+.pixel-heart-play { overflow:visible; }
+body { overflow-x:clip; }
+
+
+.floating-pixel.is-obscured{opacity:.018}.topbar,.hub{position:relative;z-index:1}.floating-pixels .pixel-heart-play{visibility:visible}

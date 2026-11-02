@@ -8,3 +8,6 @@
 - Discord invitation and Saweria destination: supplied by Bachtiar. Other destinations are from his existing portfolio.
 
 The portfolio repository `bachtiarporto` is separate. This repository is the link page.
+
+- Interactive pixel hammer and heart: reused from Bachtiar’s portfolio pixel-art and pixel-background scripts.
+- Saweria milestone: official widget URL supplied by Bachtiar, rendered using public milestone template/progress data, refreshed hourly during deployment because Saweria blocks cross-origin framing.
